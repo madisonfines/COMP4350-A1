@@ -27,6 +27,19 @@
               Vote: {{ answer.score }}
             </p>
             <span v-html="answer.body"></span>
+            <p class="content-header">ANSWER COMMENTS:</p>
+            <div v-if="answer.comment_count != 0" >
+              <div class="comments" v-for="comment in answer.comments" :key="comment.body">
+                <p class="header3">
+                  Creation Date: {{ convertToDate(comment.creation_date) }} 
+                </p>
+                <p class="header2">
+                  Vote: {{ comment.score }}
+                </p>
+                <span v-html="comment.body"></span>
+              </div>
+            </div>
+            <p v-else>No answer comments.</p>
           </div>
         </div>
         <p v-else>No answers.</p>

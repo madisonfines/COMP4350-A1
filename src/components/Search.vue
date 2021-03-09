@@ -4,6 +4,7 @@
     <input class="input" placeholder="Tag" v-model="input"/>
     <br>
     <br>
+    <!------- LISTS ALL QUESTIONS FROM RELATED TAG ------->
     <div v-for="question in allQuestions" :key="question.title">
       <p class="header">
         CREATION DATE: {{ convertToDate(question.creation_date) }}
@@ -11,15 +12,13 @@
       <p class="header">
         VOTES: {{ question.score }}
       </p>    
-      <Collapsible 
-        :title="question.title" 
-        :body="question.body" 
-        :question="question"
-      />
+      <Collapsible :question="question"/>
       <br>
       <br>
       <br>
     </div>
+    <!------- END -- LISTS ALL QUESTIONS FROM RELATED TAG ------->
+    <p class="response"> Response Time: {{ currentResponseTime }} seconds</p>
   </div>
 </template>
 
@@ -36,7 +35,6 @@ export default class Search extends Vue {
   data() {
     return {
       input: "",
-      questions: [],
     }
   }
 
@@ -44,13 +42,15 @@ export default class Search extends Vue {
     return this.$store.getters.questions;
   }
 
+  get currentResponseTime() {
+    return this.$store.getters.responseTime;
+  }
+
   convertToDate(unix: number) {
     return new Date(unix * 1000);
   }
 
   submit() {
-    console.log("clicked");
-    console.log(this.$data.input);
     this.$store.dispatch("ACTION_FETCH_QUESTIONS", { tag: this.$data.input });
   }
 }
@@ -102,5 +102,10 @@ export default class Search extends Vue {
   font-weight: bold;
   padding: 0;
   margin: 0;
+}
+
+.response {
+  font-size: 25px;
+  font-weight: bold;
 }
 </style>

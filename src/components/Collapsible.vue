@@ -1,9 +1,13 @@
 <template>
   <div>
-    <button class="collapsible" @click="collapse">{{ title }}</button>
+    <button class="collapsible" @click="collapse">{{ question.title }}</button>
+      <!------- OPENS COLLAPSIBLE ------->
       <div v-if="active" class="content">
+        <!------- QUESTION BODY ------->
         <p class="content-header">QUESTION BODY:</p>
-        <span v-html="body"></span>
+        <span v-html="question.body"></span>
+        <!------- END -- QUESTION BODY ------->
+        <!------- QUESTION COMMENTS ------->
         <p class="content-header">QUESTION COMMENTS:</p>
         <div v-if="question.comment_count != 0" >
           <div class="comments" v-for="comment in question.comments" :key="comment.body">
@@ -17,6 +21,8 @@
           </div>
         </div>
         <p v-else>No question comments.</p>
+        <!------- END -- QUESTION COMMENTS ------->
+        <!------- QUESTION ANSWERS ------->
         <p class="content-header">ANSWERS:</p>
         <div v-if="question.answer_count != 0" >
           <div class="answers" v-for="answer in question.answers" :key="answer.body">
@@ -27,6 +33,7 @@
               Vote: {{ answer.score }}
             </p>
             <span v-html="answer.body"></span>
+            <!------- ANSWER COMMENTS ------->
             <p class="content-header">ANSWER COMMENTS:</p>
             <div v-if="answer.comment_count != 0" >
               <div class="comments" v-for="comment in answer.comments" :key="comment.body">
@@ -40,10 +47,13 @@
               </div>
             </div>
             <p v-else>No answer comments.</p>
+            <!------- END -- ANSWER COMMENTS ------->
           </div>
         </div>
         <p v-else>No answers.</p>
+        <!------- END -- QUESTION ANSWERS ------->
       </div>
+      <!------- END -- OPENS COLLAPSIBLE ------->
   </div>
 </template>
 
@@ -52,9 +62,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class App extends Vue {
-  @Prop() private body!: any;
-  @Prop() private title!: string;
-  @Prop() private answer!: any;
   @Prop() private question!: any;
 
   data() {

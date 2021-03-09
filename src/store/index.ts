@@ -26,21 +26,28 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     questions: [],
+    responseTime: 0,
   },
   getters: {
     questions: (state) => {
       return state.questions;
+    },
+    responseTime: (state) => {
+      return state.responseTime;
     },
   },
   mutations: {
     MUTATION_SET_QUESTIONS(state, questions) {
       state.questions = questions;
     },
+    MUTATION_SET_RESPONSE_TIME(state, time) {
+      state.responseTime = time;
+    },
   },
   actions: {
     ACTION_FETCH_QUESTIONS({ commit, getters }, values) {
       const tag = values.tag;
-      
+      const t0 =performance.now();
       axios
         .get(
           "https://api.stackexchange.com/2.2/search?fromdate="+ encodeURIComponent(getLastWeekDate()) 
@@ -49,27 +56,27 @@ export default new Vuex.Store({
         )
         .then((response) => {
           let questions = response.data.items;
+          console.log("first" + questions.length);
 
           if(questions.length > 10) {
+            questions = [];
+
             // 10 newest questions
             const itemsDate = response.data.items;      
-            const mostRecent = [];
             let x;
             for(x = 0; x < 10; x++){
-              mostRecent.push(itemsDate[x]);
+              questions.push(itemsDate[x]);
             }
 
             // 10 most voted
-            const itemsScore = response.data.items;
-            itemsScore.sort(compareVotes);
-            const highestVote = [];
+            const itemsVote = response.data.items;
+            itemsVote.sort(compareVotes);
             let i;
             for(i = 0; i < 10; i++){
-              highestVote.push(itemsScore[i]);
+              questions.push(itemsVote[i]);
             }
 
-            // Merge both lists
-            questions = highestVote.concat(mostRecent);
+            // Sort merged list
             questions.sort(compareDates);
             let y;
             for(y = 1; y < questions.length; y++) {
@@ -80,8 +87,10 @@ export default new Vuex.Store({
           }
 
           commit("MUTATION_SET_QUESTIONS", questions);
-          console.log(getters.questions);
         });
+      
+      const t1 = performance.now();
+      commit("MUTATION_SET_RESPONSE_TIME", (t1 - t0)/1000);
     },
   }
 })

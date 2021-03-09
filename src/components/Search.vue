@@ -11,7 +11,11 @@
       <p class="header">
         VOTES: {{ question.score }}
       </p>    
-      <Collapsible :title="question.title" :body="question.answer_count"/>
+      <Collapsible 
+        :title="question.title" 
+        :body="question.body" 
+        :question="question"
+      />
       <br>
       <br>
       <br>
@@ -95,6 +99,7 @@ export default class Search extends Vue {
 
 .header {
   font-size: 18px;
+  font-weight: bold;
   padding: 0;
   margin: 0;
 }

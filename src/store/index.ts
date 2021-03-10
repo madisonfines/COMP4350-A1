@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from "axios";
 
+// ---------------------------------------------------------------
+// FUNCTIONS
+// ---------------------------------------------------------------
 function compareDates(a: any, b: any) {
   if(a.creation_date < b.creation_date) { return 1; }
   else if(a.creation_date > b.creation_date) { return -1; }  
@@ -14,6 +17,9 @@ function getLastWeekDate() {
   date.setDate(lastWeek);
   return Date.parse(date.toUTCString()) / 1000;
 }
+// ---------------------------------------------------------------
+// END -- FUNCTIONS
+// ---------------------------------------------------------------
 
 Vue.use(Vuex)
 
@@ -44,7 +50,7 @@ export default new Vuex.Store({
       const tag = values.tag;
       const lastWeek = getLastWeekDate();
 
-      // Call to get most recent questions
+      // Call to get most recent questions in the past week
       axios
         .get(
           "https://api.stackexchange.com/2.2/search?fromdate="+ encodeURIComponent(lastWeek)
@@ -74,15 +80,17 @@ export default new Vuex.Store({
               + "&site=stackoverflow&filter=!)rTkraPXxg*xgr03n8Uq"
             )
             .then((responseVotes) => {
+              // If there are more than 10 questions take 10, else take the number of questions provided
               const range = (responseVotes.data.items.length > 10) ? 10 : responseVotes.data.items.length;
 
+              // Add most voted questions to main list
               const itemsVote = responseVotes.data.items;
               let i;
               for(i = 0; i < range; i++){
                 questions.push(itemsVote[i]);
               }
 
-              // Sort merged list
+              // Sort merged list and remove duplicates
               questions.sort(compareDates);
               let y;
               for(y = 1; y < questions.length; y++) {

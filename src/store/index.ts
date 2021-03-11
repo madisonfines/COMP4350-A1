@@ -53,7 +53,7 @@ export default new Vuex.Store({
       // Call to get most recent questions in the past week
       axios
         .get(
-          "https://api.stackexchange.com/2.2/search?fromdate="+ encodeURIComponent(lastWeek)
+          "https://api.stackexchange.com/2.2/search?fromdate="+ lastWeek
           + "&order=desc&sort=creation&tagged=" + encodeURIComponent(tag) 
           + "&site=stackoverflow&filter=!)rTkraPXxg*xgr03n8Uq"
         )
@@ -75,7 +75,7 @@ export default new Vuex.Store({
           // Call to get most voted questions in the past week
           axios
             .get(
-              "https://api.stackexchange.com/2.2/search?fromdate="+ encodeURIComponent(lastWeek)
+              "https://api.stackexchange.com/2.2/search?fromdate="+ lastWeek
               + "&order=desc&sort=votes&tagged=" + encodeURIComponent(tag) 
               + "&site=stackoverflow&filter=!)rTkraPXxg*xgr03n8Uq"
             )
